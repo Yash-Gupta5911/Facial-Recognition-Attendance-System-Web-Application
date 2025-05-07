@@ -1,0 +1,197 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>Admin Dashboard - Attendance</title>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+   <style>
+     body {
+       background-color: #f6f9fc;
+       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+       padding-top: 70px;
+     }
+ 
+     .container {
+       width: 95%;
+       margin: auto;
+       background-color: #fff;
+       padding: 30px;
+       border-radius: 15px;
+       box-shadow: 0 0 15px rgba(0,0,0,0.1);
+     }
+ 
+     h2 {
+       text-align: center;
+       color: #2e7d32;
+       margin-bottom: 25px;
+     }
+ 
+     .table-wrapper {
+       overflow-x: auto;
+     }
+ 
+     table {
+       width: 100%;
+       border-collapse: collapse;
+       min-width: 1000px;
+     }
+ 
+     th, td {
+       padding: 12px 16px;
+       border: 1px solid #dcdcdc;
+       text-align: center;
+       white-space: nowrap;
+     }
+ 
+     th {
+       background-color: #4caf50;
+       color: white;
+       position: sticky;
+       top: 0;
+       z-index: 1;
+     }
+ 
+     .alert {
+       background-color: #fff3cd;
+       color: #856404;
+       padding: 10px;
+       margin-top: 20px;
+       border: 1px solid #ffeeba;
+       border-radius: 5px;
+       text-align: center;
+     }
+ 
+     .navbar-custom {
+       background-color: #343a40;
+     }
+ 
+     .navbar-custom .navbar-brand,
+     .navbar-custom .nav-link,
+     .navbar-custom .btn {
+       color: white;
+     }
+ 
+     .navbar-custom .btn {
+       margin-left: 10px;
+     }
+ 
+     body.dark-mode {
+       background-color: #121212;
+       color: #f1f1f1;
+     }
+ 
+     body.dark-mode .container {
+       background-color: #1e1e1e;
+       color: #f1f1f1;
+     }
+ 
+     body.dark-mode table {
+       background-color: #2c2c2c;
+       color: #f1f1f1;
+     }
+ 
+     body.dark-mode th {
+       background-color: #3c3c3c;
+     }
+   </style>
+</head>
+ <body>
+ 
+   <!-- Navbar -->
+   <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+     <div class="container-fluid">
+       <a class="navbar-brand" href="#">Admin Panel</a>
+ 
+       <div class="ml-auto d-flex align-items-center">
+ 
+         <!-- Download Attendance .xlsx -->
+         <a href="/download/attendance" class="btn btn-sm btn-success mr-3">
+           Download Attendance
+         </a>
+ 
+         <!-- Debarred Export Form -->
+         <form class="form-inline" method="get" action="/debarred/export" onsubmit="return validatePercentInput()" style="margin-right: 10px;">
+           <input type="number" min="1" max="100" name="threshold" class="form-control form-control-sm mr-2" placeholder="Enter % (e.g. 75)" required>
+           <button type="submit" class="btn btn-sm btn-warning">Export Debarred</button>
+         </form>
+ 
+         <!-- Theme Toggle -->
+         <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">Theme</button>
+         <!-- Logout -->
+        <a href="/logout" class="btn btn-sm btn-danger">Logout</a>
+       </div>
+     </div>
+   </nav>
+ 
+   <!-- Main Container -->
+   <div class="container mt-4">
+     <h2>Attendance Records</h2>
+ 
+     {% if attendance_data %}
+     <div class="table-wrapper">
+       <table>
+         <thead>
+           <tr>
+             <th>Student ID</th>
+             <th>Name</th>
+             <th>Course</th>
+             <th>Attendance %</th>
+             {% for date in date_columns %}
+               <th>{{ date }}</th>
+             {% endfor %}
+           </tr>
+         </thead>
+         <tbody>
+           {% for student in attendance_data %}
+           <tr>
+             <td>{{ student.student_id }}</td>
+             <td>{{ student.name }}</td>
+             <td>{{ student.course }}</td>
+             <td>{{ student.attendance_percent }}</td>
+             {% for date in date_columns %}
+               <td class="{% if student[date] == 'Absent' %}text-danger{% elif student[date] == 'Present' %}text-success{% endif %}">
+                 {{ student[date] }}
+               </td>
+             {% endfor %}
+           </tr>
+           {% endfor %}
+         </tbody>
+       </table>
+     </div>
+     {% else %}
+     <div class="alert">
+       No attendance records found.
+     </div>
+     {% endif %}
+   </div>
+ 
+   <!-- Scripts -->
+   <script>
+     function validatePercentInput() {
+       const input = document.querySelector('input[name="threshold"]');
+       const value = parseFloat(input.value);
+       if (isNaN(value) || value <= 0 || value > 100) {
+         alert("Please enter a valid percentage between 1 and 100.");
+         return false;
+       }
+       return true;
+     }
+ 
+     function toggleTheme() {
+       document.body.classList.toggle('dark-mode');
+       localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+     }
+ 
+     window.onload = () => {
+       if (localStorage.getItem('theme') === 'dark') {
+         document.body.classList.add('dark-mode');
+       }
+     };
+   </script>
+ </body>
+ </html>
+ 

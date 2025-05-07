@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f5f8fc;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+    }
+
+    .login-box {
+      max-width: 400px;
+      margin: 100px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    .theme-toggle-container {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 9999;
+    }
+
+    .captcha-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .captcha-box img {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      height: 60px;
+      width: auto;
+    }
+
+    body.dark-mode {
+      background-color: #121212;
+      color: #f1f1f1;
+    }
+
+    body.dark-mode .login-box {
+      background-color: #1e1e1e;
+      color: #f1f1f1;
+      box-shadow: 0 0 15px rgba(255,255,255,0.05);
+    }
+
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode textarea {
+      background-color: #2c2c2c;
+      color: #f1f1f1;
+      border: 1px solid #555;
+    }
+
+    body.dark-mode label {
+      color: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+  <div class="theme-toggle-container">
+    <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">Theme</button>
+  </div>
+
+  <div class="login-box">
+    <h3 class="text-center mb-4 text-danger">Admin Login</h3>
+    <form action="/admin" method="POST" onsubmit="return validateForm()">
+      <div class="form-group">
+        <label for="admin_id">Admin ID:</label>
+        <input type="text" class="form-control" name="admin_id" id="admin_id" required>
+      </div>
+      <div class="form-group">
+        <label for="admin_password">Password:</label>
+        <div class="input-group">
+          <input type="password" class="form-control" name="admin_password" id="admin_password" required>
+          <div class="input-group-append">
+            <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">Show</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="captcha">Enter CAPTCHA:</label>
+        <div class="captcha-box">
+          <img src="/captcha" alt="CAPTCHA Image" id="captchaImage">
+          <button type="button" class="btn btn-outline-secondary btn-sm" onclick="refreshCaptcha()">↻</button>
+        </div>
+        <input type="text" class="form-control mt-2" id="captcha" name="captcha" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Login</button>
+    </form>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
+
+    function togglePassword() {
+      const pwdField = document.getElementById("admin_password");
+      const btn = pwdField.nextElementSibling.querySelector("button");
+      if (pwdField.type === "password") {
+        pwdField.type = "text";
+        btn.textContent = "Hide";
+      } else {
+        pwdField.type = "password";
+        btn.textContent = "Show";
+      }
+    }
+
+    function refreshCaptcha() {
+      document.getElementById("captchaImage").src = "/captcha?" + Date.now();
+    }
+
+    function validateForm() {
+      const captcha = document.getElementById("captcha").value.trim();
+      if (captcha === "") {
+        showPopup("CAPTCHA cannot be empty.");
+        return false;
+      }
+
+      const adminId = document.getElementById("admin_id").value.trim();
+      const password = document.getElementById("admin_password").value.trim();
+      if (adminId === "" || password === "") {
+        showPopup("Please enter Admin ID and Password.");
+        return false;
+      }
+
+      return true;
+    }
+
+    function showPopup(message) {
+      const popup = document.createElement("div");
+      popup.textContent = message;
+      popup.style.position = "fixed";
+      popup.style.top = "20px";
+      popup.style.right = "20px";
+      popup.style.backgroundColor = "#dc3545";
+      popup.style.color = "#fff";
+      popup.style.padding = "12px 20px";
+      popup.style.borderRadius = "6px";
+      popup.style.boxShadow = "0 0 10px rgba(0,0,0,0.2)";
+      popup.style.zIndex = 9999;
+      document.body.appendChild(popup);
+      setTimeout(() => popup.remove(), 3000);
+    }
+
+    window.onload = () => {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+      }
+    };
+  </script>
+</body>
+</html>

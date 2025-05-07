@@ -1,0 +1,113 @@
+
+
+
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <meta charset="UTF-8">
+   <title>Student Login</title>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+   <style>
+     body {
+       background-color: #f5f8fc;
+       padding-top: 60px;
+     }
+ 
+     .login-box {
+       max-width: 400px;
+       margin: auto;
+       padding: 30px;
+       border-radius: 15px;
+       background-color: white;
+       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+     }
+ 
+     body.dark-mode {
+       background-color: #121212;
+       color: #f1f1f1;
+     }
+ 
+     body.dark-mode .login-box {
+       background-color: #1e1e1e;
+       color: #f1f1f1;
+     }
+ 
+     body.dark-mode input, body.dark-mode select {
+       background-color: #2e2e2e;
+       color: #f1f1f1;
+       border: 1px solid #555;
+     }
+ 
+     .theme-toggle {
+       position: fixed;
+       top: 10px;
+       right: 10px;
+       background-color: #007bff;
+       color: white;
+       border: none;
+       padding: 8px 16px;
+       border-radius: 5px;
+       cursor: pointer;
+       z-index: 9999;
+     }
+   </style>
+ </head>
+ <body>
+ 
+   <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
+ 
+   <div class="login-box">
+     <h3 class="text-center text-primary mb-4">Student Login</h3>
+     <form method="POST" action="{{ url_for('student_login') }}">
+       <div class="form-group">
+         <label for="student_id">Student ID:</label>
+         <input type="text" class="form-control" id="student_id" name="student_id" required>
+       </div>
+ 
+       <div class="form-group">
+         <label for="student_password">Password:</label>
+         <div class="input-group">
+           <input type="password" class="form-control" id="student_password" name="student_password" required>
+           <div class="input-group-append">
+             <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()">👁️</button>
+           </div>
+         </div>
+       </div>
+ 
+       <div class="form-group">
+         <label for="captcha">Enter CAPTCHA:</label><br>
+         <img src="{{ url_for('captcha') }}" id="captcha-img" alt="CAPTCHA" style="height: 60px; margin-bottom: 10px;"><br>
+         <button type="button" class="btn btn-sm btn-secondary mb-2" onclick="refreshCaptcha()">Refresh CAPTCHA</button>
+         <input type="text" class="form-control" id="captcha" name="captcha" required>
+       </div>
+ 
+       <button type="submit" class="btn btn-primary btn-block">Login</button>
+     </form>
+   </div>
+ 
+   <script>
+     function toggleTheme() {
+       document.body.classList.toggle('dark-mode');
+       localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+     }
+ 
+     window.onload = () => {
+       if (localStorage.getItem('theme') === 'dark') {
+         document.body.classList.add('dark-mode');
+       }
+     };
+ 
+     function togglePassword() {
+       const passwordField = document.getElementById("student_password");
+       passwordField.type = passwordField.type === "password" ? "text" : "password";
+     }
+ 
+     function refreshCaptcha() {
+       const captchaImg = document.getElementById("captcha-img");
+       captchaImg.src = "{{ url_for('captcha') }}?t=" + new Date().getTime();  // bust cache
+     }
+   </script>
+ </body>
+ </html>
+ 

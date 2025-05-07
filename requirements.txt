@@ -1,0 +1,8 @@
+pickle-mixin
+numpy
+opencv-python
+opencv-contrib-python
+cvzone
+mysql-connector-python
+tabulate
+face-recognition

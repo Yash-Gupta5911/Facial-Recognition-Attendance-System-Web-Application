@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: facial-attendance-system
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    autoDeploy: true
+    envVars:
+      - key: DB_HOST
+        value: your-db-host-url
+      - key: DB_USER
+        value: root
+      - key: DB_PASSWORD
+        value: 2004
+      - key: DB_NAME
+        value: bcaibm_attendance
+      - key: SECRET_KEY
+        value: some-secure-random-string

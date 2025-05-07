@@ -1,0 +1,175 @@
+
+
+
+
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <meta charset="UTF-8">
+   <title>Student Dashboard</title>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+   <style>
+     body { background-color: #eef3f9; padding-top: 80px; }
+     .container { background-color: white; padding: 30px; border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+     .present { color: green; font-weight: bold; }
+     .absent { color: red; font-weight: bold; }
+ 
+     .navbar-custom { background-color: #343a40; }
+     .navbar-custom .navbar-brand, .navbar-custom .nav-link, .navbar-custom .btn { color: white; }
+     .navbar-custom .btn { margin-left: 10px; }
+ 
+     body.dark-mode { background-color: #121212; color: #f1f1f1; }
+     body.dark-mode .container { background-color: #1e1e1e; color: #f1f1f1; }
+     body.dark-mode table { background-color: #2c2c2c; color: #f1f1f1; }
+     body.dark-mode th { background-color: #3c3c3c; }
+     body.dark-mode input, body.dark-mode select { background-color: #333; color: #fff; border: 1px solid #555; }
+     /* Dark Mode for Calculator (Form Inputs) */
+body.dark-mode .card {
+  background-color: #1e1e1e;
+  color: #f1f1f1;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .card select,
+body.dark-mode .card input {
+  background-color: #333;
+  color: #f1f1f1;
+  border: 1px solid #555;
+}
+
+body.dark-mode .card button {
+  background-color: #28a745;
+  border: none;
+}
+
+body.dark-mode #result {
+  background-color: transparent;
+  padding: 10px;
+}
+
+   </style>
+
+ </head>
+ <body>
+   <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+     <div class="container-fluid">
+       <a class="navbar-brand" href="#">Student Portal</a>
+       <div class="ml-auto">
+         <a href="/logout" class="btn btn-sm btn-danger">Logout</a>
+         <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">Theme</button>
+       </div>
+     </div>
+   </nav>
+ 
+   <div class="container">
+     <div class="row">
+       <!-- Left Side -->
+       <div class="col-md-8">
+         <h3 class="mb-4 text-success">Welcome, {{ name }} (ID: {{ student_id }})</h3>
+         <h5>Course: {{ course }}</h5>
+         <h5>Total Classes: <strong>{{ total_classes }}</strong></h5>
+         <h5>Classes Present: <strong class="text-success">{{ present_count }}</strong></h5>
+         <h5 class="mt-2">Attendance Percentage: <strong>{{ percentage }}%</strong></h5>
+         <hr>
+         <h4 class="mt-4">Attendance Records</h4>
+ 
+         {% if attendance_data %}
+         <table class="table table-bordered table-striped mt-3">
+           <thead class="thead-dark">
+             <tr>
+               <th>Date</th>
+               <th>Status</th>
+             </tr>
+           </thead>
+           <tbody>
+             {% for date, status in attendance_data %}
+             <tr>
+               <td>{{ date }}</td>
+               <td class="{% if status == 'Present' %}present{% elif status == 'Absent' %}absent{% endif %}">{{ status }}</td>
+             </tr>
+             {% endfor %}
+           </tbody>
+         </table>
+         {% else %}
+           <p class="text-danger">No attendance records found.</p>
+         {% endif %}
+       </div>
+ 
+       <!-- Right Side - Attendance Calculator -->
+       <div class="col-md-4">
+         <div class="card p-3">
+           <h4 class="text-center text-primary mb-3">Attendance Calculator</h4>
+ 
+           <div class="form-group">
+             <label for="percentage">Percentage Required:</label>
+             <select class="form-control" id="percentage">
+               <option value="60">60%</option>
+               <option value="65">65%</option>
+               <option value="70">70%</option>
+               <option value="75" selected>75%</option>
+               <option value="80">80%</option>
+               <option value="85">85%</option>
+               <option value="90">90%</option>
+             </select>
+           </div>
+ 
+           <div class="form-group">
+             <label for="present">Classes Present:</label>
+             <input type="number" id="present" class="form-control" value="{{ present_count }}">
+           </div>
+ 
+           <div class="form-group">
+             <label for="total">Total Classes:</label>
+             <input type="number" id="total" class="form-control" value="{{ total_classes }}">
+           </div>
+ 
+           <button class="btn btn-success btn-block" onclick="calculateAttendance()">Calculate</button>
+ 
+           <div id="result" class="mt-3 text-center"></div>
+         </div>
+       </div>
+     </div>
+   </div>
+ 
+   <script>
+     function toggleTheme() {
+       document.body.classList.toggle('dark-mode');
+       localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+     }
+ 
+     window.onload = () => {
+       if (localStorage.getItem('theme') === 'dark') {
+         document.body.classList.add('dark-mode');
+       }
+     };
+ 
+     function calculateAttendance() {
+       const percentageRequired = parseFloat(document.getElementById("percentage").value);
+       const present = parseInt(document.getElementById("present").value);
+       const total = parseInt(document.getElementById("total").value);
+ 
+       if (isNaN(present) || isNaN(total) || total === 0) {
+         document.getElementById("result").innerHTML = "<p class='text-danger'>Please enter valid numbers!</p>";
+         return;
+       }
+ 
+       const currentPercent = (present / total) * 100;
+       const neededTotal = Math.ceil((present * 100) / percentageRequired);
+       const classesToAttend = neededTotal - total;
+ 
+       let resultHTML = `<p>Current Attendance: <strong>${present}/${total}</strong> -> <strong>${currentPercent.toFixed(2)}%</strong></p>`;
+ 
+       if (currentPercent >= percentageRequired) {
+         const maxBunks = Math.floor((present / (percentageRequired / 100)) - total);
+         resultHTML += `<p class="text-success">✅ You can miss <strong>${maxBunks}</strong> more classes and still maintain ${percentageRequired}% attendance!</p>`;
+       } else {
+         resultHTML += `<p class="text-danger">⚠️ You need to attend <strong>${classesToAttend}</strong> more classes to achieve ${percentageRequired}% attendance!</p>`;
+       }
+ 
+       document.getElementById("result").innerHTML = resultHTML;
+     }
+   </script>
+ </body>
+ </html>
+ 

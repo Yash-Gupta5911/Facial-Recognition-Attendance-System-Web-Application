@@ -1,0 +1,232 @@
+/* 
+body {
+    background-color: #f5f8fc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 40px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  body.dark-mode {
+    background-color: #121212;
+    color: #f1f1f1;
+  }
+  
+
+  .login-box, .card, .container {
+    padding: 30px;
+    border-radius: 15px;
+    background-color: white;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  body.dark-mode .login-box,
+  body.dark-mode .card,
+  body.dark-mode .container {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  }
+  
+  .card {
+    padding: 40px;
+  }
+  
+
+  h1 {
+    font-size: 2.2rem;
+  }
+  
+
+  .btn-lg {
+    font-size: 1.2rem;
+  }
+  
+
+  table {
+    margin-top: 20px;
+  }
+  
+  body.dark-mode table {
+    background-color: #2c2c2c;
+    color: #ddd;
+  }
+  
+  body.dark-mode th,
+  body.dark-mode td {
+    border-color: #444;
+  }
+  
+  body.dark-mode .btn {
+    border-color: #555;
+  }
+  
+
+  .table-responsive {
+    overflow-x: auto;
+  }
+  
+
+  .mt-3 {
+    margin-top: 1rem !important;
+  }
+  .mb-3 {
+    margin-bottom: 1rem !important;
+  }
+  .mb-4 {
+    margin-bottom: 1.5rem !important;
+  }
+  .mt-4 {
+    margin-top: 1.5rem !important;
+  }
+  .float-right {
+    float: right !important;
+  }
+  
+
+  @media (max-width: 768px) {
+    body {
+      padding: 20px;
+      flex-direction: column;
+      height: auto;
+    }
+    .card, .container, .login-box {
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    h1 {
+      font-size: 1.8rem;
+    }
+    .btn-lg {
+      font-size: 1rem;
+    }
+  }
+   */
+
+
+   /* body {
+    background-color: #f5f8fc;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                url('https://via.placeholder.com/1920x600') center/cover no-repeat;
+    color: white;
+    padding: 100px 0;
+    width: 100%;
+  }
+  
+  .features, .testimonial {
+    padding: 60px 0;
+  }
+  
+  footer {
+    background-color: #343a40;
+    color: #fff;
+  }
+  
+  .theme-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 9999;
+  }
+  
+  .dark-mode {
+    background-color: #121212;
+    color: #f1f1f1;
+  }
+  
+  .dark-mode .hero,
+  .dark-mode .features,
+  .dark-mode .testimonial,
+  .dark-mode footer {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+  }
+  
+  .theme-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 9999;
+  }
+  
+  body.dark-mode .theme-toggle {
+    background-color: #444;
+    color: #f1f1f1;
+  }
+   */
+
+
+   html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    background-color: #f5f8fc;
+    margin: 0;
+    padding-top: 70px; /* for sticky navbar */
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .hero {
+    height: 80vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                url('/static/images/hero_bg.jpg') center/cover no-repeat;
+    color: white;
+    animation: fadeIn 1.2s ease-in-out;
+  }
+  
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  
+  .features, .testimonial {
+    padding: 60px 0;
+  }
+  
+  footer {
+    background-color: #343a40;
+    color: #fff;
+  }
+  
+  .dark-mode {
+    background-color: #121212;
+    color: #f1f1f1;
+  }
+  
+  .dark-mode .hero,
+  .dark-mode .features,
+  .dark-mode .testimonial,
+  .dark-mode footer,
+  .dark-mode .navbar {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+  }
+  
+  .navbar .btn-outline-light {
+    margin-left: auto;
+  }
+  
