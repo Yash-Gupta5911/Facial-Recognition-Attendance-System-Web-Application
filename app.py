@@ -1,4 +1,4 @@
-
+import os
 from flask import Flask, render_template, redirect, url_for, request, session
 from threading import Thread
 from main import check_attendance_all, run_recognition_loop, get_student_attendance_web
@@ -13,23 +13,23 @@ from flask import send_file
 import io
 
 # Database setup
-mysql_conn = my.connect(
-    host='localhost',
-    user='root',
-    password='2004',
-    database='bcaibm_attendance'
+db = mysql.connector.connect(
+    host=os.environ.get('DB_HOST'),
+    user=os.environ.get('DB_USER'),
+    password=os.environ.get('DB_PASSWORD'),
+    database=os.environ.get('DB_NAME')
 )
 mysql_cursor = mysql_conn.cursor()
 
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'  # Required for session management
+app.secret_key = 'e3f4a9cbd8224c90bfb4a7e2a1dfebc8'  # Required for session management
 
 # ---------------------------- Routes ----------------------------
 
 @app.route('/')
 def home():
-    return render_template("home.html")
+    return "Facial Recognition Attendance System"
 
 @app.route('/captcha')
 def captcha():
