@@ -7,7 +7,7 @@ services:
     autoDeploy: true
     envVars:
       - key: DB_HOST
-        value: mysql://root:2004/bcaibm_attendance
+        value: localhost
       - key: DB_USER
         value: root
       - key: DB_PASSWORD
