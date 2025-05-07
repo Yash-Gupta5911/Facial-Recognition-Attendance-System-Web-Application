@@ -6,3 +6,4 @@ cvzone
 mysql-connector-python
 tabulate
 face-recognition
+gunicorn
